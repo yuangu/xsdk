@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">example</string>
+    <string name="login_text">登陆</string>
+    <string name="init_text">初使化SDK</string>
+    <string name="push_text">推送</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="banner_text">banner广告</string>
+    <string name="interstitialAd">插页广告</string>
+    <string name="rewardedVideosAD_button">激励广告</string>
+</resources>

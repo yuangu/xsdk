@@ -1,0 +1,13 @@
+rootProject.name = "xsdk"
+
+include ':example'
+
+include ':core'
+include ':webchat'
+include ':xiaomi_push'
+include ':huawei_push'
+include ':vivo_push'
+include ':oppo_push'
+include ':google_push'
+include ':admob'
+include ':gdt'

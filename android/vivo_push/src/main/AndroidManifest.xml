@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.seantone.xsdk.vivo_push">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+        <!--Vivo Push开放平台中应用的appid 和api key-->
+        <meta-data
+            android:name="com.vivo.push.api_key"
+            android:value="${vivo_push_api_key}" />
+
+        <meta-data
+            android:name="com.vivo.push.app_id"
+            android:value="${vivo_push_app_id}" />
+
+        <service
+            android:name="com.vivo.push.sdk.service.CommandClientService"
+            android:permission="com.push.permission.UPSTAGESERVICE"
+            android:exported="true"/>
+
+        <receiver android:name="com.seantone.xsdk.vivo_push.PushMessageReceiverImpl"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.vivo.pushclient.action.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="com.seantone.xsdk.vivo_push.VivoPushActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${applicationId}.push.vivo"
+                    android:path="/message"
+                    android:scheme="pushscheme" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>

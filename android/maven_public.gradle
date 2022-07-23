@@ -1,0 +1,61 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.kezong.fat-aar'
+
+group 'com.seantone.xsdk'
+version '1.0.0'
+//def artifactId = "alipay"
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
+publishing {
+    publications {
+        Production(MavenPublication) {
+            // 使用方引用 implementation 'cn.com.jack:mavendemo:2.7.0-SNAPSHOT'
+            groupId = "$project.group"
+//            artifactId = "$artifactId"
+            version = "$project.version"
+            // 依赖 bundleReleaseAar 任务，并上传其产出的aar
+            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+            // 也可以指定上传的AAR包，但是需要先手动生成aar
+            // artifact("$buildDir/outputs/aar/${project.getName()}-debug.aar")
+            // 上传source，这样使用放可以看到方法注释
+            artifact generateSourcesJar
+            // pom文件中声明依赖，从而传递到使用方
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.implementation.allDependencies.each {
+                    // 避免出现空节点或 artifactId=unspecified 的节点
+                    if (it.group != null && (it.name != null && "unspecified" != it.name) && it.version != null) {
+                        println it.toString()
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                        dependencyNode.appendNode('scope', 'implementation')
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        // 定义一个 maven 仓库
+        maven {
+            url = "${codingArtifactsRepoUrl}"
+            // 仓库用户名密码
+            credentials {
+                username = "${codingArtifactsGradleUsername}"
+                password = "${codingArtifactsGradlePassword}"
+            }
+        }
+    }
+}
+
+task publishToMaven(dependsOn: ['assemble', 'publish']) {
+    doLast {
+        println "finish publish to maven"
+    }
+}

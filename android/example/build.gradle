@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.application'
+    id 'com.huawei.agconnect'
+}
+
+android {
+    compileSdkVersion 31
+
+    // 测试使用的环境来自：https://github.com/Authing/guard-android
+    defaultConfig {
+        applicationId "com.seantone.htwnl"
+        minSdkVersion 19
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // for vivo push
+        manifestPlaceholders.put("vivo_push_api_key", '您的vivokey')
+        manifestPlaceholders.put("vivo_push_app_id", '您的vivo apid')
+    }
+
+    signingConfigs {
+        release {
+            keyAlias 'app'
+            keyPassword '123456'
+            storeFile file('keystore.keystore')
+            storePassword '123456'
+            v1SigningEnabled true //兼容v1
+            v2SigningEnabled true //兼容v2
+        }
+
+        debug {
+            keyAlias 'app'
+            keyPassword '123456'
+            storeFile file('keystore.keystore')
+            storePassword '123456'
+            v1SigningEnabled true //兼容v1
+            v2SigningEnabled true //兼容v2
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    maven {
+        url 'https://developer.huawei.com/repo/'
+    }
+}
+
+dependencies {
+    implementation project(path: ':core')
+    implementation project(path: ':webchat')
+    implementation project(path: ':xiaomi_push')
+    implementation project(path: ':vivo_push')
+    implementation project(path: ':oppo_push')
+    implementation project(path: ':huawei_push')
+    implementation project(path: ':gdt')
+    implementation project(path: ':admob')
+
+    implementation 'com.android.support:multidex:1.0.1'
+
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}

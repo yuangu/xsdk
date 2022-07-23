@@ -1,0 +1,39 @@
+xiaomi:
+  push:
+    appid: 2882303761520155720
+    appkey: 5702015591720
+
+webchat:
+  oauth:
+    appid: 微信的appid
+  share:
+    appid: 微信的appid
+  payment:
+    appid: 微信的appid
+
+vivo:
+  push:
+    appid: vivo的appid
+    appkey: vivo的appkey
+
+oppo:
+  push:
+    appid: oppo的appid
+    appkey: oppo的appid
+
+huawei:
+  push:
+    appid: huawei的appid
+
+gdt:
+  ad:
+    appid: gdt的appid
+    banner: gdt的bannerid
+
+admob:
+  ad:
+    banner: admob ad的banner id
+    interstitial: admob ad的interstitial id
+    reward: admob ad的reward id
+
+
