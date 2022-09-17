@@ -1,5 +1,9 @@
 package com.seantone.xsdk.plugin.webchat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
 import com.seantone.xsdk.core.XSDK;
@@ -108,6 +112,30 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
         req.transaction = UUID.randomUUID().toString();
         mCallBackMap.put(req.transaction, callback);
         iwxapi.sendReq(req);
+    }
+
+    @Override
+    public void isAuthorized(LoginParams params, IXSDKCallback callback) {
+        // 微信不支持
+        JSONObject ret = new JSONObject();
+        try {
+            ret.put("ret", false);
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        callback.onSuccess(ret.toString());
+    }
+
+    @Override
+    public void logout(LoginParams params, IXSDKCallback callback) {
+        // 微信不支持
+        JSONObject ret = new JSONObject();
+        try {
+            ret.put("ret", true);
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        callback.onSuccess(ret.toString());
     }
 
     @Override
@@ -241,6 +269,17 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
     public void initSDK(SDKParams params, IXSDKCallback callback) {
         try {
             iwxapi = WXAPIFactory.createWXAPI(XSDK.getInstance().getTopActivity(),  params.appid, true);
+            // 将应用的 appId 注册到微信
+            iwxapi.registerApp(params.appid);
+            //建议动态监听微信启动广播进行注册到微信
+            XSDK.getInstance().getTopActivity().registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    iwxapi.registerApp(params.appid);
+                }
+            }, new IntentFilter(ConstantsAPI.ACTION_REFRESH_WXAPP));
+
+
             mInstace = this;
             callback.onSuccess("{}");
         }catch (Exception e)

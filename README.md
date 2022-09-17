@@ -36,6 +36,17 @@
 | --- | --- |  --------- | --- |--- |
 
 
+### Android的混淆配置
+
+### webchat
+https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Access_Guide/Android.html
+```
+-keep class com.tencent.mm.opensdk.** {*;}
+-keep class com.tencent.wxop.** {*;}
+-keep class com.tencent.mm.sdk.** {*;}
+```
+
+
 ## API设计说明(必读)
 
 1、为了方便原生层与脚本层的通信,在原生层所有的参数及回调的返回参数使用json格式化（也就是字符串）。

@@ -23,9 +23,10 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.7.0'
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation project(path: ':core')
+
+    //Facebook登录
+    implementation 'com.facebook.android:facebook-login:latest.release'
 }
 
 apply from: '../maven_public.gradle'

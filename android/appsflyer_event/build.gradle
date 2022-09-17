@@ -23,9 +23,11 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.7.0'
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation project(path: ':core')
+
+    //AppsFlyer
+    implementation 'com.appsflyer:af-android-sdk:6.3.2'
+    implementation 'com.appsflyer:oaid:6.2.4'
 }
 
 apply from: '../maven_public.gradle'

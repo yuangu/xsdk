@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.seantone.xsdk.google_account">
+<!--    android:theme="@android:style/Theme.Translucent.NoTitleBar"-->
+    <application>
+        <activity
+            android:name="com.seantone.xsdk.google_account.GoogleLoginActivity"
+            android:theme="@style/transparent_activity"
+            android:exported="true"
+            >
+        </activity>
+    </application>
+
+</manifest>

@@ -7,16 +7,19 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.seantone.xsdk.core.annotation.ForAD;
+import com.seantone.xsdk.core.annotation.ForEvent;
 import com.seantone.xsdk.core.annotation.ForLogin;
 import com.seantone.xsdk.core.annotation.ForPay;
 import com.seantone.xsdk.core.annotation.ForPush;
 import com.seantone.xsdk.core.annotation.ForShare;
 import com.seantone.xsdk.core.define.AdParams;
+import com.seantone.xsdk.core.define.EventParams;
 import com.seantone.xsdk.core.define.LoginParams;
 import com.seantone.xsdk.core.define.PayParams;
 import com.seantone.xsdk.core.define.SDKParams;
 import com.seantone.xsdk.core.define.ShareParams;
 import com.seantone.xsdk.core.impl.IAD;
+import com.seantone.xsdk.core.impl.IEvent;
 import com.seantone.xsdk.core.impl.ILogger;
 import com.seantone.xsdk.core.impl.ILogin;
 import com.seantone.xsdk.core.impl.IPay;
@@ -38,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
+public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
     static String TAG = "xsdk";
 
 
@@ -63,7 +66,8 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
     private Map<String, IPush> mPushSDKMap = new HashMap<>();
     // 广告类的sdk
     private Map<String, IAD> mADSDKMap = new HashMap<>();
-
+    // 上报类的sdk
+    private Map<String, IEvent> mEventMap = new HashMap<>();
 
     //========================================================================
     ILogger logger = new ILogger() {
@@ -76,12 +80,12 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
 
         @Override
         public void log(String content) {
-            Log.d(mTag, content);
+            Log.i(mTag, content);
         }
 
         @Override
         public void log(String content, Throwable throwable) {
-            Log.d(mTag, content, throwable);
+            Log.i(mTag, content, throwable);
         }
     };
 
@@ -101,26 +105,43 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
                 if (mLoginSDKMap.containsKey(params.provider)) {
                     ISDK sdk = (ISDK) (mLoginSDKMap.get(params.provider));
                     sdk.initSDK(params, callback);
+                }else{
+                    Log.i("xdk", "not found init sdk:" + params.provider);
                 }
             } else if (params.service.equals("share")) {
                 if (mShareSDKMap.containsKey(params.provider)) {
                     ISDK sdk = (ISDK) (mShareSDKMap.get(params.provider));
                     sdk.initSDK(params, callback);
+                }else{
+                    Log.i("xdk", "not found init sdk:" + params.provider);
                 }
             } else if (params.service.equals("payment")) {
                 if (mPaySDKMap.containsKey(params.provider)) {
                     ISDK sdk = (ISDK) (mPaySDKMap.get(params.provider));
                     sdk.initSDK(params, callback);
+                }else{
+                    Log.i("xdk", "not found init sdk:" + params.provider);
                 }
             } else if (params.service.equals("push")) {
                 if (mPushSDKMap.containsKey(params.provider)) {
                     ISDK sdk = (ISDK) (mPushSDKMap.get(params.provider));
                     sdk.initSDK(params, callback);
+                }else{
+                    Log.i("xdk", "not found init sdk:" + params.provider);
                 }
             } else if (params.service.equals("ad")) {
                 if (mADSDKMap.containsKey(params.provider)) {
                     ISDK sdk = (ISDK) (mADSDKMap.get(params.provider));
                     sdk.initSDK(params, callback);
+                }else{
+                    Log.i("xdk", "not found init sdk:" + params.provider);
+                }
+            }  else if (params.service.equals("event")) {
+                if (mEventMap.containsKey(params.provider)) {
+                    ISDK sdk = (ISDK) (mEventMap.get(params.provider));
+                    sdk.initSDK(params, callback);
+                }else{
+                    Log.i("xdk", "not found init sdk:" + params.provider);
                 }
             } else {
                 if (mLoginSDKMap.containsKey(params.provider)) {
@@ -146,6 +167,14 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
                     sdk.initSDK(params, callback);
                     return;
                 }
+
+                if (mEventMap.containsKey(params.provider)) {
+                    ISDK sdk = (ISDK) (mEventMap.get(params.provider));
+                    sdk.initSDK(params, callback);
+                    return;
+                }
+
+                Log.i("xdk", "not found init sdk:" + params.provider);
             }
         });
     }
@@ -162,7 +191,9 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
             if (mShareSDKMap.containsKey(params.provider)) {
                 mShareSDKMap.get(params.provider).share(params, callback);
             } else {
-                getLogger().log("not found share sdk:" + params.provider);
+                String errMsg = "not found share sdk:" + params.provider;
+                callback.onFaild("{\"msg\":\"\"" + errMsg + "\"}");
+                getLogger().log(errMsg);
             }
         });
     }
@@ -179,7 +210,9 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
             if (mPaySDKMap.containsKey(params.provider)) {
                 mPaySDKMap.get(params.provider).pay(params, callback);
             } else {
-                getLogger().log("not found pay sdk:" + params.provider);
+                String errMsg = "not found pay sdk:" + params.provider;
+                callback.onFaild("{\"msg\":\"\"" + errMsg + "\"}");
+                getLogger().log(errMsg);
             }
         });
     }
@@ -196,15 +229,71 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
             if (mLoginSDKMap.containsKey(params.provider)) {
                 mLoginSDKMap.get(params.provider).login(params, callback);
             } else {
-                getLogger().log("not found login sdk:" + params.provider);
+                String errMsg = "not found auth sdk:" + params.provider;
+                callback.onFaild("{\"msg\":\"\"" + errMsg + "\"}");
+                getLogger().log(errMsg);
             }
         });
+    }
+
+    @Override
+    public void isAuthorized(LoginParams params, IXSDKCallback callback) {
+        this.doInUIThread(() -> {
+            if (mLoginSDKMap.containsKey(params.provider)) {
+                mLoginSDKMap.get(params.provider).isAuthorized(params, callback);
+            } else {
+                String errMsg = "not found auth sdk:" + params.provider;
+                callback.onFaild("{\"msg\":\"\"" + errMsg + "\"}");
+                getLogger().log(errMsg);
+            }
+        });
+    }
+
+    public static void isAuthorized(String jsonParams, IXSDKCallback callback) {
+        LoginParams params = new Gson().fromJson(jsonParams, LoginParams.class);
+        XSDK.getInstance().isAuthorized(params, callback);
     }
 
     public static void login(String jsonParams, IXSDKCallback callback) {
         LoginParams params = new Gson().fromJson(jsonParams, LoginParams.class);
         XSDK.getInstance().login(params, callback);
     }
+
+    @Override
+    public void logout(LoginParams params, IXSDKCallback callback) {
+        this.doInUIThread(() -> {
+            if (mLoginSDKMap.containsKey(params.provider)) {
+                mLoginSDKMap.get(params.provider).logout(params, callback);
+            } else {
+                String errMsg = "not found auth sdk:" + params.provider;
+                callback.onFaild("{\"msg\":\"\"" + errMsg + "\"}");
+                getLogger().log(errMsg);
+            }
+        });
+    }
+
+    public static void logout(String jsonParams, IXSDKCallback callback) {
+        LoginParams params = new Gson().fromJson(jsonParams, LoginParams.class);
+        XSDK.getInstance().logout(params, callback);
+    }
+
+    //========================================================================
+    @Override
+    public void postEvent(EventParams params) {
+        this.doInUIThread(() -> {
+            if (  mEventMap.containsKey(params.provider)) {
+                mEventMap.get(params.provider).postEvent(params);
+            } else {
+                getLogger().log("not found logout sdk:" + params.provider);
+            }
+        });
+    }
+
+    public static void postEvent(String jsonParams) {
+        EventParams params = new Gson().fromJson(jsonParams, EventParams.class);
+        XSDK.getInstance().postEvent(params);
+    }
+    //========================================================================
 
     //========================================================================
     IPushCallback mPushCallback = null;
@@ -287,9 +376,12 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
         try {
             allClass = ClassUtils.getClasses(context, packageName);
         } catch (Exception e) {
+            Log.e("xsdk", e.getMessage());
             e.printStackTrace();
             return;
         }
+
+        Log.i("xsdk", "found sdk number:" +  String.valueOf(allClass.size()));
 
         for (int i = 0; i < allClass.size(); i++) {
             Class clazz = allClass.get(i);
@@ -330,10 +422,16 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
                 ForAD forLogin = (ForAD) clazz.getAnnotation(ForAD.class);
                 XSDK.this.mADSDKMap.put(forLogin.provider(), (IAD) sdk);
             }
+
+            if (IEvent.class.isAssignableFrom(clazz) && clazz.isAnnotationPresent(ForEvent.class)) {
+                ForEvent forEvent = (ForEvent) clazz.getAnnotation(ForEvent.class);
+                XSDK.this.mEventMap.put(forEvent.provider(), (IEvent) sdk);
+            }
         }
     }
 
     public void init(Context context) {
+        Log.i("xsdk", "init with context");
         if (Looper.myLooper() == Looper.getMainLooper()) {
             this._init(context);
         } else {
@@ -357,4 +455,6 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD {
             getTopActivity().runOnUiThread(runnable);
         }
     }
+
+
 }
