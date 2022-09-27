@@ -1,9 +1,37 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.kezong.fat-aar'
+apply plugin: 'signing'
 
 group 'com.seantone.xsdk'
-version '1.0.0'
+version '1.0.0-SNAPSHOT'
 //def artifactId = "alipay"
+
+// 是否 Release 发布（根据是否包含 SNAPSHOT 判断）
+def isReleaseBuild() {
+    return "$project.version".contains("SNAPSHOT") == false
+}
+
+// Central Repository: https://central.sonatype.org/publish/publish-guide/
+// Release 仓库地址（默认先发布到 staging 暂存库，需要手动发布到中央仓库）
+def getReleaseRepositoryUrl() {
+    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL : "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+// Snapshot 仓库地址
+def getSnapshotRepositoryUrl() {
+    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL : "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+}
+
+// 仓库账号
+def getRepositoryUsername() {
+    return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
+}
+
+// 仓库密码
+def getRepositoryPassword() {
+    return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
+}
+
 
 task generateSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -17,6 +45,11 @@ publishing {
             groupId = "$project.group"
 //            artifactId = "$artifactId"
             version = "$project.version"
+
+            project.ext["signing.keyId"] =  SNAPSHOT_SIGN_KEYID    //GPG指纹后8位
+            project.ext["signing.password"] = SNAPSHOT_SIGN_PASSWORD  //GPG密码
+            project.ext["signing.secretKeyRingFile"] = SNAPSHOT_SIGN_KEY_FILE //GPG私钥
+
             // 依赖 bundleReleaseAar 任务，并上传其产出的aar
             afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
             // 也可以指定上传的AAR包，但是需要先手动生成aar
@@ -44,14 +77,18 @@ publishing {
     repositories {
         // 定义一个 maven 仓库
         maven {
-            url = "${codingArtifactsRepoUrl}"
+            url = isReleaseBuild() ? getReleaseRepositoryUrl():getSnapshotRepositoryUrl()
             // 仓库用户名密码
             credentials {
-                username = "${codingArtifactsGradleUsername}"
-                password = "${codingArtifactsGradlePassword}"
+                username = getRepositoryUsername()
+                password = getRepositoryPassword()
             }
         }
     }
+}
+
+project.signing {
+    sign project.publishing.publications
 }
 
 task publishToMaven(dependsOn: ['assemble', 'publish']) {
