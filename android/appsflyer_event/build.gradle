@@ -10,12 +10,6 @@ android {
         targetSdkVersion PROP_TARGET_SDK_VERSION
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -30,4 +24,6 @@ dependencies {
     implementation 'com.appsflyer:oaid:6.2.4'
 }
 
-apply from: '../maven_public.gradle'
+if(hasProperty('SONATYPE_NEXUS_USERNAME') && hasProperty('SONATYPE_NEXUS_PASSWORD')){
+    apply from: '../maven_public.gradle'
+}

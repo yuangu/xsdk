@@ -115,18 +115,6 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
     }
 
     @Override
-    public void isAuthorized(LoginParams params, IXSDKCallback callback) {
-        // 微信不支持
-        JSONObject ret = new JSONObject();
-        try {
-            ret.put("ret", false);
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-        callback.onSuccess(ret.toString());
-    }
-
-    @Override
     public void logout(LoginParams params, IXSDKCallback callback) {
         // 微信不支持
         JSONObject ret = new JSONObject();

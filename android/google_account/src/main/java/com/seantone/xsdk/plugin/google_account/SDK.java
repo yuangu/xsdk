@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.seantone.xsdk.core.XSDK;
 import com.seantone.xsdk.core.annotation.ForLogin;
@@ -15,9 +14,6 @@ import com.seantone.xsdk.core.impl.ILogin;
 import com.seantone.xsdk.core.impl.ISDK;
 import com.seantone.xsdk.core.impl.IXSDKCallback;
 import com.seantone.xsdk.google_account.GoogleLoginActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 @ForLogin(provider = "google")
 public class SDK  implements ISDK, ILogin {
@@ -40,20 +36,6 @@ public class SDK  implements ISDK, ILogin {
             //  intent.putExtra("_data", data);
             ((Activity)content) . startActivity(intent);
         });
-    }
-
-    @Override
-    public void isAuthorized(LoginParams params, IXSDKCallback callback) {
-        Context content = XSDK.getInstance().getTopActivity();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount( content );
-
-        JSONObject ret = new JSONObject();
-        try {
-            ret.put("ret", account != null);
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-        callback.onSuccess(ret.toString());
     }
 
     @Override

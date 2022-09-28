@@ -36,6 +36,7 @@ import com.seantone.xsdk.core.impl.ad.INativeAd;
 import com.seantone.xsdk.core.impl.ad.INativeAdEventCallBack;
 import com.seantone.xsdk.core.impl.ad.IRewardedVideoAd;
 import com.seantone.xsdk.core.impl.ad.IRewardedVideoAdEventCallBack;
+import com.seantone.xsdk.plugin.PluginProguard;
 
 import java.util.HashMap;
 import java.util.List;
@@ -236,24 +237,6 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
         });
     }
 
-    @Override
-    public void isAuthorized(LoginParams params, IXSDKCallback callback) {
-        this.doInUIThread(() -> {
-            if (mLoginSDKMap.containsKey(params.provider)) {
-                mLoginSDKMap.get(params.provider).isAuthorized(params, callback);
-            } else {
-                String errMsg = "not found auth sdk:" + params.provider;
-                callback.onFaild("{\"msg\":\"\"" + errMsg + "\"}");
-                getLogger().log(errMsg);
-            }
-        });
-    }
-
-    public static void isAuthorized(String jsonParams, IXSDKCallback callback) {
-        LoginParams params = new Gson().fromJson(jsonParams, LoginParams.class);
-        XSDK.getInstance().isAuthorized(params, callback);
-    }
-
     public static void login(String jsonParams, IXSDKCallback callback) {
         LoginParams params = new Gson().fromJson(jsonParams, LoginParams.class);
         XSDK.getInstance().login(params, callback);
@@ -371,7 +354,11 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
     private void _init(Context context) {
         mActivityManager = new ActivityManager(context);
 
-        String packageName = "com.seantone.xsdk.plugin";
+        //String packageName = "com.seantone.xsdk.plugin";
+        // 解决混淆后，获取包名的问题
+        Package pack = PluginProguard.class.getPackage();
+        String packageName = pack.getName();
+
         List<Class> allClass = null;
         try {
             allClass = ClassUtils.getClasses(context, packageName);

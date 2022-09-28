@@ -3,7 +3,7 @@ apply plugin: 'com.kezong.fat-aar'
 apply plugin: 'signing'
 
 group 'com.seantone.xsdk'
-version '1.0.0-SNAPSHOT'
+version '1.0.0'
 //def artifactId = "alipay"
 
 // 是否 Release 发布（根据是否包含 SNAPSHOT 判断）
@@ -56,6 +56,31 @@ publishing {
             // artifact("$buildDir/outputs/aar/${project.getName()}-debug.aar")
             // 上传source，这样使用放可以看到方法注释
             artifact generateSourcesJar
+
+            pom {
+                name = "$project.name"
+                description = "$project.name library for xsdk"
+                url = 'https://github.com/yuangu/xsdk'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'yuangu'
+                        name = 'yuangu'
+                        email = 'seantone@126.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com:yuangu/xsdk.git'
+                    developerConnection = 'scm:git:ssh://github.com:yuangu/xsdk.git'
+                    url = 'https://github.com/yuangu/xsdk'
+                }
+            }
+
             // pom文件中声明依赖，从而传递到使用方
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')

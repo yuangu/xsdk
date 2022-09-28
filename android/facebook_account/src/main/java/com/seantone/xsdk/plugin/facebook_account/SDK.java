@@ -54,22 +54,6 @@ public class SDK implements ISDK, ILogin {
     }
 
     @Override
-    public void isAuthorized(LoginParams params, IXSDKCallback callback) {
-        boolean result= false;
-
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        result = accessToken != null && !accessToken.isExpired();
-
-        JSONObject ret = new JSONObject();
-        try {
-            ret.put("ret", result);
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-        callback.onSuccess(ret.toString());
-    }
-
-    @Override
     public void logout(LoginParams params, IXSDKCallback callback) {
         XSDK.getInstance().doInUIThread(() -> {
             LoginManager.getInstance().logOut();//退出Facebook登录

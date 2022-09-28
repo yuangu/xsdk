@@ -23,23 +23,7 @@ android {
     }
 
     signingConfigs {
-        release {
-            keyAlias 'app'
-            keyPassword '123456'
-            storeFile file('keystore.keystore')
-            storePassword '123456'
-            v1SigningEnabled true //兼容v1
-            v2SigningEnabled true //兼容v2
-        }
 
-        debug {
-            keyAlias 'app'
-            keyPassword '123456'
-            storeFile file('keystore.keystore')
-            storePassword '123456'
-            v1SigningEnabled true //兼容v1
-            v2SigningEnabled true //兼容v2
-        }
     }
 
 
@@ -69,7 +53,7 @@ dependencies {
     implementation project(path: ':oppo_push')
     implementation project(path: ':huawei_push')
     implementation project(path: ':gdt')
-    implementation project(path: ':admob')
+//    implementation project(path: ':admob')
 
     implementation 'com.android.support:multidex:1.0.1'
 

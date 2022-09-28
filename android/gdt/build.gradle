@@ -10,12 +10,6 @@ android {
         targetSdkVersion PROP_TARGET_SDK_VERSION
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -24,7 +18,9 @@ android {
 
 dependencies {
     implementation project(path: ':core')
-    implementation 'com.qq.e.union:union:+'
+    implementation 'com.qq.e.union:union:4.490.1360'
 }
 
-apply from: '../maven_public.gradle'
+if(hasProperty('SONATYPE_NEXUS_USERNAME') && hasProperty('SONATYPE_NEXUS_PASSWORD')){
+    apply from: '../maven_public.gradle'
+}
