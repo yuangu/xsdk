@@ -1,7 +1,7 @@
 xiaomi:
   push:
-    appid: 2882303761520155720
-    appkey: 5702015591720
+    appid: 小米的appid
+    appkey: 小米的appkey
 
 webchat:
   oauth:
@@ -35,5 +35,10 @@ admob:
     banner: admob ad的banner id
     interstitial: admob ad的interstitial id
     reward: admob ad的reward id
+
+google:
+  oauth:
+    appid: google的web client id
+
 
 

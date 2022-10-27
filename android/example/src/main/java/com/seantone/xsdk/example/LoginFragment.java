@@ -55,6 +55,12 @@ public class LoginFragment extends Fragment {
         loginInitBtn.setOnClickListener(view -> {
           this.onInitButtonClick();
         });
+
+        Button loginDoBtn = (Button)  getActivity().findViewById(R.id.login_do_button);
+        loginDoBtn.setOnClickListener(view -> {
+            this.onLoginButtonClick();
+        });
+
     }
 
     @Override

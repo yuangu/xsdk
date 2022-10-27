@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">example</string>
+    <string name="app_name">xsdk example</string>
     <string name="login_text">登陆</string>
     <string name="init_text">初使化SDK</string>
     <string name="push_text">推送</string>

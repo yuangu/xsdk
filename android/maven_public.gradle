@@ -3,7 +3,7 @@ apply plugin: 'com.kezong.fat-aar'
 apply plugin: 'signing'
 
 group 'com.seantone.xsdk'
-version '1.0.0'
+version '1.0.1'
 //def artifactId = "alipay"
 
 // 是否 Release 发布（根据是否包含 SNAPSHOT 判断）

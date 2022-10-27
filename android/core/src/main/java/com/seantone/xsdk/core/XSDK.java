@@ -38,6 +38,9 @@ import com.seantone.xsdk.core.impl.ad.IRewardedVideoAd;
 import com.seantone.xsdk.core.impl.ad.IRewardedVideoAdEventCallBack;
 import com.seantone.xsdk.plugin.PluginProguard;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -428,6 +431,49 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
         }
     }
 
+    // 判断是否有该SDK类型
+    public boolean hasSDK(String sdkName, String sdkType){
+        if (sdkType.equals("oauth")) {
+            if (mLoginSDKMap.containsKey(sdkName)) {
+               return true;
+            }
+        } else if (sdkType.equals("share")) {
+            if (mShareSDKMap.containsKey(sdkName)) {
+                return true;
+            }
+        } else if (sdkType.equals("payment")) {
+            if (mPaySDKMap.containsKey(sdkName)) {
+                return true;
+            }
+        } else if (sdkType.equals("push")) {
+            if (mPushSDKMap.containsKey(sdkName)) {
+                return true;
+            }
+        } else if (sdkType.equals("ad")) {
+            if (mADSDKMap.containsKey(sdkName)) {
+                return true;
+            }
+        }  else if (sdkType.equals("event")) {
+            if (mEventMap.containsKey(sdkName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static  boolean hasSDK(String jsonParams) {
+        String sdkName= "";
+        String sdkType = "";
+        try {
+            JSONObject j = new JSONObject(jsonParams);
+            sdkType = j.getString("service");
+            sdkName= j.getString("provider");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return XSDK.getInstance().hasSDK(sdkName, sdkType);
+    }
+
     public Activity getTopActivity() {
         if (mActivityManager != null) {
             return mActivityManager.getTopActivity();
@@ -442,6 +488,4 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
             getTopActivity().runOnUiThread(runnable);
         }
     }
-
-
 }
