@@ -46,6 +46,22 @@ https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Access_Guide/Android.h
 -keep class com.tencent.mm.sdk.** {*;}
 ```
 
+### vivo
+https://dev.vivo.com.cn/documentCenter/doc/365
+
+```
+-dontwarn com.vivo.push.**
+-keep class com.vivo.push.**{*; }
+-keep class com.vivo.vms.**{*; }
+-keep class com.seantone.xsdk.vivo_push.PushMessageReceiverImpl{*;}
+```
+
+### oppo
+```
+-keep public class * extends android.app.Service
+-keep class com.heytap.msp.** { *;}
+```
+
 
 ## API设计说明(必读)
 

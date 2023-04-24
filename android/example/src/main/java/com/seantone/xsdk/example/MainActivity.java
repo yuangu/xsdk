@@ -1,33 +1,18 @@
 package com.seantone.xsdk.example;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentContainer;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.res.AssetManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.google.gson.Gson;
-import com.seantone.xsdk.core.ClassUtils;
 import com.seantone.xsdk.core.XSDK;
-import com.seantone.xsdk.core.define.LoginParams;
-import com.seantone.xsdk.core.define.SDKParams;
-import com.seantone.xsdk.core.impl.IPushCallback;
-import com.seantone.xsdk.core.impl.ISDK;
-import com.seantone.xsdk.core.impl.IXSDKCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity {
     private String[] sdkArray = {};

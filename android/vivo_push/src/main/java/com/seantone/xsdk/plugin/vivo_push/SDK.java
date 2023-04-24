@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
+
 
 import com.seantone.xsdk.core.XSDK;
 import com.seantone.xsdk.core.annotation.ForPush;
@@ -13,7 +13,7 @@ import com.seantone.xsdk.core.impl.IPush;
 import com.seantone.xsdk.core.impl.ISDK;
 import com.seantone.xsdk.core.impl.IXSDKCallback;
 import com.vivo.push.PushClient;
-import com.vivo.push.util.VivoPushException;
+import com.vivo.push.IPushActionListener;
 
 import org.json.JSONObject;
 

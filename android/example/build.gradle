@@ -43,7 +43,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -64,7 +64,8 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':webchat')
     implementation project(path: ':xiaomi_push')
-    implementation project(path: ':vivo_push')
+    // vivo推送打正式包有问题
+//    implementation project(path: ':vivo_push')
     implementation project(path: ':oppo_push')
     implementation project(path: ':huawei_push')
     implementation project(path: ':gdt')

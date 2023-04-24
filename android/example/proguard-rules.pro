@@ -20,20 +20,30 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+
 -keep class com.xiaomi.mipush.sdk.DemoMessageReceiver.**{*;}
--keep class com.seantone.xsdk.plugin.** {*;}
 
 # huawei
- -ignorewarnings
- -keepattributes *Annotation*
- -keepattributes Exceptions
- -keepattributes InnerClasses
- -keepattributes Signature
- -keepattributes SourceFile,LineNumberTable
- -keep class com.huawei.hianalytics.**{*;}
- -keep class com.huawei.updatesdk.**{*;}
- -keep class com.huawei.hms.**{*;}
+-ignorewarnings
+-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+-keep class com.huawei.hianalytics.**{*;}
+-keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.hms.**{*;}
 
 # oppo
- -keep public class * extends android.app.Service
- -keep class com.heytap.msp.** { *;}
+-keep public class * extends android.app.Service
+-keep class com.heytap.msp.** { *;}
+
+# vivo
+-dontwarn com.vivo.push.**
+-keep class com.vivo.push.**{*; }
+-keep class com.vivo.vms.**{*; }
+-keep class com.seantone.xsdk.vivo_push.PushMessageReceiverImpl{*;}
+
+# xsdk
+-keep class  com.seantone.xsdk.plugin.**
+-keep class  com.seantone.xsdk.core.define.** { *;}
