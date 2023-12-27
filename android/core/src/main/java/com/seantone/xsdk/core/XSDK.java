@@ -319,8 +319,14 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
     }
 
     public static IBannerAd createBannerAd(String jsonParams, IBannerAdEventCallBack callBack) {
-        AdParams params = new Gson().fromJson(jsonParams, AdParams.class);
-        return XSDK.getInstance().createBannerAd(params, callBack);
+        try{
+            AdParams params = new Gson().fromJson(jsonParams, AdParams.class);
+            return XSDK.getInstance().createBannerAd(params, callBack);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

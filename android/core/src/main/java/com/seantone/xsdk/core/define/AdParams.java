@@ -14,12 +14,12 @@ public class AdParams {
     public String adUnitId = "";
 
     public class Style{
-        public Integer left = null;
-        public Integer  right = null;
-        public Integer  top = null;
-        public Integer  bottom= null;
+        public Float left = null;
+        public Float  right = null;
+        public Float  top = null;
+        public Float  bottom= null;
 
-        public Integer size = null;
+        public Float size = null;
     }
 
     @SerializedName("style")
