@@ -10,8 +10,11 @@ public class SDKParams {
     public String appid = "";     // appid
 
     @SerializedName("appkey")
-    public String appkey = ""; //非必填
+    public String appkey = "";   //非必填
+
+    @SerializedName("channel")
+    public String channel = "";  //渠道，非必填
 
     @SerializedName("service")
-    public String service = "";
+    public String service = "";  //sdk类型
 }

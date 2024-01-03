@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     s.author           = { 'yuangu' => 'seantone@126.com' }
     s.source           = { :svn => 'svn://gitee.com/yuangu/xsdk/ios/xsdk_webchat', :tag => s.version.to_s }
    
-    s.ios.deployment_target = '9.0'
+    s.ios.deployment_target = '12.0'
     s.static_framework = true
     
     s.source_files  = "src/**/*.{h,m,mm,swift}"

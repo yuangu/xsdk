@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     s.author           = { 'yuangu' => 'seantone@126.com' }
     s.source           = { :svn => 'svn://gitee.com/yuangu/xsdk/ios/xsdk_apple_push',  :tag => s.version.to_s }
    
-    s.ios.deployment_target = '9.0'
+    s.ios.deployment_target = '12.0'
     s.libraries    = 'stdc++'
     
     s.source_files  = "src/**/*.{h,m,mm,swift}"

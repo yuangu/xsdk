@@ -13,6 +13,9 @@
     NSMutableDictionary* mPaySDKMap;
     NSMutableDictionary* mLoginSDKMap;
     NSMutableDictionary* mPushSDKMap;
+    NSMutableDictionary* mADSDKMap;
+    NSMutableDictionary* mEventSDKMap;
+    
     id<IPushCallback> mPushCallback;
 }
 
@@ -38,6 +41,8 @@ static XSDK*  mInstace = nil;
         self->mPaySDKMap = [NSMutableDictionary  dictionaryWithCapacity:0];
         self->mLoginSDKMap = [NSMutableDictionary  dictionaryWithCapacity:0];
         self->mPushSDKMap = [NSMutableDictionary  dictionaryWithCapacity:0];
+        self-> mADSDKMap = [NSMutableDictionary  dictionaryWithCapacity:0];;
+        self-> mEventSDKMap = [NSMutableDictionary  dictionaryWithCapacity:0];;
     }
     return self;
 }
@@ -51,10 +56,22 @@ static XSDK*  mInstace = nil;
     }
 }
 
+
+-(void) doInCallBackThread:(dispatch_block_t) block
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+}
+
+-(NSString*) warpNSString:(NSString*)str{
+    return  [NSString stringWithFormat:@"%@", str];
+}
+
 -(void) initSDK:(SDKParams*) params :(id<IXSDKCallback>)callBack
 {
     [self doInUIThread: ^{
+       
         if (params.service == @"oauth") {
+
             id<ISDK> object = [self->mLoginSDKMap objectForKey:params.provider];
             if(object != nil){
                 [object initSDK:params:callBack];
@@ -62,6 +79,7 @@ static XSDK*  mInstace = nil;
             }
             
         } else if (params.service == @"share") {
+          
             id<ISDK> object = [self->mShareSDKMap objectForKey:params.provider];
             if(object != nil){
                 [object initSDK:params:callBack];
@@ -74,8 +92,26 @@ static XSDK*  mInstace = nil;
                 return;
             }
         } else if (params.service == @"push") {
-            
+         
+            id<ISDK> object = [self->mPushSDKMap objectForKey:params.provider];
+            if(object != nil){
+                [object initSDK:params:callBack];
+                return;
+            }
+        }else if (params.service == @"ad") {
+            id<ISDK> object = [self->mADSDKMap objectForKey:params.provider];
+            if(object != nil){
+                [object initSDK:params:callBack];
+                return;
+            }
+        }else if (params.service == @"event") {
+            id<ISDK> object = [self->mEventSDKMap objectForKey:params.provider];
+            if(object != nil){
+                [object initSDK:params:callBack];
+                return;
+            }
         }else{
+        
             id<ISDK> object = [self->mLoginSDKMap objectForKey:params.provider];
             if(object != nil){
                 [object initSDK:params:callBack];
@@ -89,6 +125,18 @@ static XSDK*  mInstace = nil;
             }
             
             object = [self->mPaySDKMap objectForKey:params.provider];
+            if(object != nil){
+                [object initSDK:params:callBack];
+                return;
+            }
+            
+            object  = [self->mADSDKMap objectForKey:params.provider];
+            if(object != nil){
+                [object initSDK:params:callBack];
+                return;
+            }
+            
+            object  = [self->mEventSDKMap objectForKey:params.provider];
             if(object != nil){
                 [object initSDK:params:callBack];
                 return;
@@ -123,8 +171,6 @@ static XSDK*  mInstace = nil;
 
 -(void) share:(ShareParams*) params :(id<IXSDKCallback>)callBack
 {
-    
-    
     [self doInUIThread: ^{
         id<IShare> object = [self->mShareSDKMap objectForKey:params.provider];
         if(object != nil){
@@ -135,8 +181,58 @@ static XSDK*  mInstace = nil;
     }];
 }
 
-+(void) initSDK:(NSString*) json :(id<IXSDKCallback>)callBack
+-(void) postEvent:(EventParams*) params{
+    [self doInUIThread: ^{
+        id<IEvent> object = [self->mEventSDKMap objectForKey:params.provider];
+        if(object != nil){
+            [object postEvent:params];
+            return;
+        }
+        NSLog(@"xsdk not found %@", params.provider);
+    }];
+}
+
+// 创建激励广告
+-(id<IRewardedVideoAd>) createRewardedVideoAd:(ADParams*)params :(id<IRewardedVideoAdEventCallBack>)callBack
 {
+    id<IAD> object = [self->mADSDKMap objectForKey:params.provider];
+    if(object != nil){
+        return  [object createRewardedVideoAd: params:callBack];
+    }
+    return nil;
+}
+// 创建banner广告
+-(id<IBannerAd>) createBannerAd:(ADParams*)params :(id<IBannerAdEventCallBack>)  callBack
+{
+    id<IAD> object = [self->mADSDKMap objectForKey:params.provider];
+    if(object != nil){
+        return  [object createBannerAd: params:callBack];
+    }
+    return nil;
+}
+// 创建原生广告
+-(id<INativeAd>) createNativeAd:(ADParams*)params :(id<INativeAdEventCallBack>) callBack
+{
+    id<IAD> object = [self->mADSDKMap objectForKey:params.provider];
+    if(object != nil){
+        return  [object createNativeAd: params:callBack];
+    }
+    return nil;
+}
+// 创建插页式广告
+-(id<IInterstitialAd>) createInterstitialAd:(ADParams*)params :(id<IInterstitialAdEventCallBack>) callBack
+{
+    id<IAD> object = [self->mADSDKMap objectForKey:params.provider];
+    if(object != nil){
+        return  [object createInterstitialAd: params:callBack];
+    }
+    return nil;
+}
+
+
++(void) initSDK:(NSString*)json :(id<IXSDKCallback>)callBack
+{
+
     NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
                                                          options:NSJSONReadingMutableContainers
@@ -176,22 +272,80 @@ static XSDK*  mInstace = nil;
 
 +(void) share:(NSString*) json :(id<IXSDKCallback>)callBack
 {
-    NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys: nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString* ret = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys: nil];
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
+//    NSString* ret = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    
+// 
+//    [callBack onSucess:ret];
     
- 
-    [callBack onSucess:ret];
-    
-//    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
-//    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
-//                                                         options:NSJSONReadingMutableContainers
-//                                                           error:nil];
-//
-//
-//    ShareParams *params = [[ShareParams alloc] init];
-//    [params setValuesForKeysWithDictionary:dict];
-//    [[XSDK getInstance] share:params :callBack];
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+
+
+    ShareParams *params = [[ShareParams alloc] init];
+    [params setValuesForKeysWithDictionary:dict];
+    [[XSDK getInstance] share:params :callBack];
+}
+
++(void) postEvent:(NSString*) json{
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+
+
+    EventParams *params = [[EventParams alloc] init];
+    [params setValuesForKeysWithDictionary:dict];
+    [[XSDK getInstance] postEvent:params];
+}
+
+// 创建banner广告
++(id<IBannerAd>) createBannerAd:(NSString*)json  :(id<IBannerAdEventCallBack>)  callBack{
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+
+    ADParams *params = [[ADParams alloc] init];
+    [params setValuesForKeysWithDictionary:dict];
+    return [[XSDK getInstance] createBannerAd:params :callBack];
+}
+// 创建原生广告
++(id<INativeAd>) createNativeAd:(NSString*) json  :(id<INativeAdEventCallBack>) callBack{
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+
+    ADParams *params = [[ADParams alloc] init];
+    [params setValuesForKeysWithDictionary:dict];
+    return [[XSDK getInstance] createNativeAd:params :callBack];
+}
+// 创建插页式广告
++(id<IInterstitialAd>) createInterstitialAd:(NSString*) json  :(id<IInterstitialAdEventCallBack>) callBack{
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+
+    ADParams *params = [[ADParams alloc] init];
+    [params setValuesForKeysWithDictionary:dict];
+    return [[XSDK getInstance] createInterstitialAd:params :callBack];
+}
+
++(id<IRewardedVideoAd>) createRewardedVideoAd:(NSString*) json :(id<IRewardedVideoAdEventCallBack>)callBack
+{
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+
+    ADParams *params = [[ADParams alloc] init];
+    [params setValuesForKeysWithDictionary:dict];
+    return [[XSDK getInstance] createRewardedVideoAd:params :callBack];
 }
 
 //========================================================
@@ -226,6 +380,16 @@ static XSDK*  mInstace = nil;
 - (void) forPush:(NSString *)provider :(id<IPush>)  obj
 {
     [ self->mPushSDKMap setObject:obj forKey:provider];
+}
+
+- (void) forAD:(NSString *)provider :(id<IShare>)  obj
+{
+    [ self->mADSDKMap setObject:obj forKey:provider];
+}
+
+- (void) forEvent:(NSString *)provider :(id<IShare>)  obj
+{
+    [ self->mEventSDKMap setObject:obj forKey:provider];
 }
 
 @end

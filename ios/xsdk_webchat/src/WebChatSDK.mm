@@ -159,7 +159,10 @@ struct __AutoWebchatResg{
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
             
             NSString* ret = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            [callBack onSucess:ret];
+            
+            [[XSDK getInstance] doInCallBackThread:^{
+                [callBack onSuccess:[NSString stringWithFormat:@"%@", ret]];
+            }];
         }
         
         else if(_resp.errCode  == WXErrCodeUserCancel ){
@@ -168,7 +171,10 @@ struct __AutoWebchatResg{
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
             
             NSString* ret = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            [callBack onFaild:ret];
+    
+            [[XSDK getInstance] doInCallBackThread:^{
+                [callBack onFaild:[NSString stringWithFormat:@"%@", ret]];
+            }];
         }
         
         else  if(_resp.errCode  == WXErrCodeAuthDeny){
@@ -177,7 +183,9 @@ struct __AutoWebchatResg{
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
             
             NSString* ret = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            [callBack onFaild:ret];
+            [[XSDK getInstance] doInCallBackThread:^{
+                [callBack onFaild:[NSString stringWithFormat:@"%@", ret]];
+            }];
         }
     }
     
@@ -224,7 +232,9 @@ struct __AutoWebchatResg{
             [self->mCallBackMap removeObjectForKey:@"share"];
         }
         
-        [callBack onSucess:@"{}"];
+        [[XSDK getInstance] doInCallBackThread:^{
+            [callBack onSuccess:[NSString stringWithFormat:@"%@", @"{}"]];
+        }];
     }
 }
 

@@ -3,6 +3,6 @@
 @protocol IBannerAd  <NSObject>
 -(void) show:(NSString*) params;
 -(void) hide;
--(void) hide;
+-(void) destory;
 @end
 

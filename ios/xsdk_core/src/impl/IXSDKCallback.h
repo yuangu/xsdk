@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 
 @protocol IXSDKCallback <NSObject>
--(void)onSucess: (NSString*)ret;
+@required
+-(void)onSuccess: (NSString*)ret;
+@required
 -(void)onFaild: (NSString*) ret;
 @end

@@ -6,5 +6,8 @@
 @property (nonatomic, copy) NSString *provider;
 @property (nonatomic, copy) NSString *appid;
 @property (nonatomic, copy) NSString *appkey; //非必填
+@property (nonatomic, copy) NSString *channel; //渠道，非必填
 @property (nonatomic, copy) NSString *service;
+
 @end
+

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol IInterstitialAdEventCallBack <NSObject>
+@protocol INativeAdEventCallBack <NSObject>
 -(void)onLoad:(NSString*) ret;
 -(void)onClick;
 -(void)onError:(NSString*) ret;

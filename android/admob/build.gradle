@@ -18,7 +18,7 @@ android {
 
 dependencies {
     implementation project(path: ':core')
-    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
 }
 
 if(hasProperty('SONATYPE_NEXUS_USERNAME') && hasProperty('SONATYPE_NEXUS_PASSWORD')){
