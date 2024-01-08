@@ -20,7 +20,6 @@ struct __AutoAutoAdmobSDKResg{
 -(id) init{
     if(self=[super init])
     {
-        [[XSDKModuleManager sharedInstance] addModule:self];
         self->isInitAdmobSDK = false;
     }
     return self;

@@ -1,9 +1,13 @@
 package com.seantone.xsdk.plugin.webchat;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.seantone.xsdk.core.XSDK;
@@ -17,6 +21,7 @@ import com.seantone.xsdk.core.define.ShareParams;
 import com.seantone.xsdk.core.error.ErrCode;
 import com.seantone.xsdk.core.impl.ILogin;
 import com.seantone.xsdk.core.impl.IPay;
+import com.seantone.xsdk.core.impl.IPushCallback;
 import com.seantone.xsdk.core.impl.ISDK;
 import com.seantone.xsdk.core.impl.IShare;
 import com.seantone.xsdk.core.impl.IXSDKCallback;
@@ -35,6 +40,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+
 
 @ForPay(provider = "webchat")
 @ForLogin(provider = "webchat")
@@ -55,6 +62,10 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
         return mInstace;
     }
 
+    public static boolean isInit = false;
+
+    public static boolean isShowWXEntryActivity  = false;  //分享使用的
+    private String transaction = "";
     private boolean checkInstallWebChat(IXSDKCallback callback)
     {
         if(iwxapi.isWXAppInstalled()){
@@ -94,6 +105,7 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
             payReq.transaction = UUID.randomUUID().toString();
             mCallBackMap.put(payReq.transaction, callback);
             iwxapi.sendReq(payReq);
+            transaction = payReq.transaction;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -112,6 +124,7 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
         req.transaction = UUID.randomUUID().toString();
         mCallBackMap.put(req.transaction, callback);
         iwxapi.sendReq(req);
+        transaction = req.transaction;
     }
 
     @Override
@@ -152,6 +165,7 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
 
         if (req != null) {
             mCallBackMap.put(req.transaction, callback);
+            transaction = req.transaction;
             iwxapi.sendReq(req);
         }
     }
@@ -256,19 +270,90 @@ public class SDK implements ISDK, IPay, ILogin, IShare {
     @Override
     public void initSDK(SDKParams params, IXSDKCallback callback) {
         try {
-            iwxapi = WXAPIFactory.createWXAPI(XSDK.getInstance().getTopActivity(),  params.appid, true);
-            // 将应用的 appId 注册到微信
-            iwxapi.registerApp(params.appid);
-            //建议动态监听微信启动广播进行注册到微信
-            XSDK.getInstance().getTopActivity().registerReceiver(new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    iwxapi.registerApp(params.appid);
-                }
-            }, new IntentFilter(ConstantsAPI.ACTION_REFRESH_WXAPP));
+            if(!isInit) {
+                iwxapi = WXAPIFactory.createWXAPI(XSDK.getInstance().getTopActivity(), params.appid, true);
+                // 将应用的 appId 注册到微信
+                iwxapi.registerApp(params.appid);
+                //建议动态监听微信启动广播进行注册到微信
+                XSDK.getInstance().getTopActivity().registerReceiver(new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        iwxapi.registerApp(params.appid);
+                    }
+                }, new IntentFilter(ConstantsAPI.ACTION_REFRESH_WXAPP));
+
+                // http://runxinzhi.com/zhang-cb-p-9923581.html
+                XSDK.getInstance().getTopActivity().runOnUiThread(() -> {
+                              Application content = XSDK.getInstance().getTopActivity().getApplication();
+
+                            Application.ActivityLifecycleCallbacks callbacks = new Application.ActivityLifecycleCallbacks() {
+
+                                @Override
+                                public void onActivityCreated(Activity activity,  Bundle bundle) {
+
+                                }
+
+                                @Override
+                                public void onActivityStarted( Activity activity) {
+
+                                }
+
+                                @Override
+                                public void onActivityResumed( Activity activity) {
+                                    Log.i("TAG", "onResume");
 
 
-            mInstace = this;
+                                                // 如果0.2秒后没有调用onResume，则认为是分享成功并且留着微信。
+                                                if (SDK.isShowWXEntryActivity == false) {
+                                                    // 不存在callBack
+                                                    if (!mCallBackMap.containsKey(transaction)) {
+                                                        return;
+                                                    }
+
+                                                    IXSDKCallback _callBack = mCallBackMap.get(transaction);
+                                                    transaction= "";
+                                                    if(_callBack == null) return;
+                                                    mCallBackMap.remove(transaction);
+
+                                                    JSONObject ret = new JSONObject();
+                                                    // 取消操作了
+                                                    XSDK.getInstance().doInUIThread(() -> _callBack.onFaild(ret.toString()));
+
+                                                }
+                                            }
+
+
+
+
+                                @Override
+                                public void onActivityPaused(Activity activity) {
+
+                                }
+
+                                @Override
+                                public void onActivityStopped(Activity activity) {
+
+                                }
+
+                                @Override
+                                public void onActivitySaveInstanceState(Activity activity,  Bundle bundle) {
+
+                                }
+
+                                @Override
+                                public void onActivityDestroyed( Activity activity) {
+
+                                }
+                            };
+
+                            content.registerActivityLifecycleCallbacks(callbacks);
+                        }
+                );
+
+
+                mInstace = this;
+                isInit = true;
+            }
             callback.onSuccess("{}");
         }catch (Exception e)
         {

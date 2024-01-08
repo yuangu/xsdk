@@ -19,7 +19,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        SDK.isShowWXEntryActivity = true;
         SDK sdk = SDK.getInstance();
         if(sdk != null && sdk.getIWXApi() != null){
             sdk.getIWXApi().handleIntent(getIntent(), this);
@@ -46,6 +46,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onResp(final BaseResp resp) {
         finish();
+        SDK.isShowWXEntryActivity = false;
         SDK.getInstance().onPayResp(resp);
     }
 

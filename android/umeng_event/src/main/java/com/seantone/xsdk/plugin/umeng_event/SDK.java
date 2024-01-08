@@ -9,7 +9,6 @@ import com.seantone.xsdk.core.define.SDKParams;
 import com.seantone.xsdk.core.impl.IEvent;
 import com.seantone.xsdk.core.impl.ISDK;
 import com.seantone.xsdk.core.impl.IXSDKCallback;
-import com.seantone.xsdk.umeng_event.Utils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
@@ -21,12 +20,13 @@ public class SDK implements ISDK, IEvent {
         // 该sdk会自动初使化
         Context content = XSDK.getInstance().getTopActivity();
 
-        String channelId = Utils.getChannelId();
+        String channelId = params.channel;
         UMConfigure.preInit(content.getApplicationContext(), params.appid, channelId);
 
         //使用线程初使化
         new Thread(() -> {
             try{
+                UMConfigure.submitPolicyGrantResult(content.getApplicationContext(), true);
                 UMConfigure.init(content.getApplicationContext(), params.appid, channelId, UMConfigure.DEVICE_TYPE_PHONE, "");
             }catch (Exception e){
                 XSDK.getInstance().getLogger().log("umeng", e);

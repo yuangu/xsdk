@@ -364,7 +364,7 @@ static XSDK*  mInstace = nil;
 
 - (void) forLogin:(NSString *)provider :(id<ILogin>) obj
 {
-    [ self->mShareSDKMap setObject:obj forKey:provider];
+    [ self->mLoginSDKMap setObject:obj forKey:provider];
 }
 
 - (void) forPay:(NSString *)provider :(id<IPay>) obj
@@ -374,7 +374,7 @@ static XSDK*  mInstace = nil;
 
 - (void) forShare:(NSString *)provider :(id<IShare>)  obj
 {
-    [ self->mLoginSDKMap setObject:obj forKey:provider];
+    [ self->mShareSDKMap setObject:obj forKey:provider];
 }
 
 - (void) forPush:(NSString *)provider :(id<IPush>)  obj

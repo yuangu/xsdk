@@ -3,4 +3,10 @@
     package="com.seantone.xsdk.admob">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${ADMOB_APPLICATION_ID}"
+            />
+    </application>
 </manifest>

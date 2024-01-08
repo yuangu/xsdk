@@ -491,7 +491,10 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             runnable.run();
         } else {
-            getTopActivity().runOnUiThread(runnable);
+            if(getTopActivity() != null){
+                getTopActivity().runOnUiThread(runnable);
+            }
+
         }
     }
 }

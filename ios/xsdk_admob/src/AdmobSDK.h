@@ -9,11 +9,11 @@
 
 #import "ISdk.h"
 #import "IAD.h"
-#import "XSDKModuleManager.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AdmobSDK : NSObject<IAD, LVModule>
+@interface AdmobSDK : NSObject<IAD>
 
 @end
 

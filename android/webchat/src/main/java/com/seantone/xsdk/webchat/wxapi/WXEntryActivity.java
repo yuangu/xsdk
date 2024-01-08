@@ -20,6 +20,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         super.onCreate(savedInstanceState);
         //注册API
         SDK sdk = SDK.getInstance();
+        SDK.isShowWXEntryActivity = true;
         if (sdk != null && sdk.getIWXApi() != null) {
             sdk.getIWXApi().handleIntent(getIntent(), this);
         } else {
@@ -46,6 +47,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onResp(BaseResp resp) {
         finish();
+        SDK.isShowWXEntryActivity = false;
         SDK.getInstance().onResp(resp);
     }
 }
