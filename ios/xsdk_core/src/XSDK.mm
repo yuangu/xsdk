@@ -302,6 +302,15 @@ static XSDK*  mInstace = nil;
     [[XSDK getInstance] postEvent:params];
 }
 
++(bool) hasSDK:(NSString*) json
+{
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+    return [[XSDK getInstance] hasSDK:[dict objectForKey:@"provider"] :[dict objectForKey:@"service" ]];
+}
+
 // 创建banner广告
 +(id<IBannerAd>) createBannerAd:(NSString*)json  :(id<IBannerAdEventCallBack>)  callBack{
     NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
@@ -392,6 +401,46 @@ static XSDK*  mInstace = nil;
     [ self->mEventSDKMap setObject:obj forKey:provider];
 }
 
+-(bool) hasSDK:(NSString*) sdkName :(NSString*) sdkType
+{
+    if ( [sdkType isEqual:@"oauth" ]) {
+        return [self->mLoginSDKMap objectForKey:sdkName] != nil;
+        
+    } else if ([sdkType isEqual:@"share"]) {
+        return [self->mShareSDKMap objectForKey:sdkName] != nil;
+    } else if ([sdkType isEqual:@"payment"]) {
+        return  [self->mPaySDKMap objectForKey:sdkName] != nil;
+    } else if ([sdkType isEqual:@"push"]) {
+        return  [self->mPushSDKMap objectForKey:sdkName] != nil;
+    } else if ([sdkType isEqual:@"ad"]) {
+        return  [self->mADSDKMap objectForKey:sdkName] != nil;
+    }  else if ([sdkType isEqual:@"event"]) {
+        return  [self->mEventSDKMap objectForKey:sdkName] != nil;
+    }
+    return false;
+}
+
+-(void) logout:(LogoutParams*) params :(id<IXSDKCallback>)callBack{
+    [self doInUIThread: ^{
+        id<ILogin> object = [self->mLoginSDKMap objectForKey:params.provider];
+        if(object != nil){
+            [object logout:params:callBack];
+            return;
+        }
+        NSLog(@"xsdk not found %@", params.provider);
+    }];
+}
+
++(void) logout:(NSString*) json :(id<IXSDKCallback>)callBack{
+    NSData *jsonData =  [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:nil];
+    LogoutParams *params = [[LogoutParams alloc] init];
+    [params setValuesForKeysWithDictionary:dict];
+    
+    [[XSDK getInstance] logout:params :callBack];
+}
 @end
 
 

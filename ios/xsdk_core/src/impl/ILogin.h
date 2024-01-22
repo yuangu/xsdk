@@ -4,4 +4,5 @@
 
 @protocol ILogin  <NSObject>
 -(void) login:(LoginParams*) params :(id<IXSDKCallback>)callBack;
+-(void) logout:(LogoutParams*) params :(id<IXSDKCallback>)callBack;
 @end

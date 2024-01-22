@@ -2,11 +2,12 @@
 #import "xsdk.h"
 
 @implementation AdmobBannder{
-//    BOOL isInitGdtSDK;
+    id<IBannerAdEventCallBack> eventCallBack;
 }
 
 -  (void) create:(ADParams*)params :(id<IBannerAdEventCallBack>)callBack
 {
+    self->eventCallBack = callBack;
     dispatch_async(dispatch_get_main_queue(), ^{
         if(self.bannerView != nil) return;
         
@@ -18,7 +19,7 @@
         
         self.bannerView.translatesAutoresizingMaskIntoConstraints = NO;
         [currentView addSubview:self.bannerView];
-        
+        self.bannerView.delegate = self;
        
         
         NSMutableArray *mutableArray = [NSMutableArray array];
@@ -88,10 +89,6 @@
         self.bannerView.autoloadEnabled = YES;
         self.bannerView.hidden =   YES;
         
-        if(callBack != nil)
-        {
-            [[XSDK getInstance] doInCallBackThread:^{ [callBack onLoad];}];
-        }
     });
 }
 
@@ -109,6 +106,11 @@
         self.bannerView.hidden = YES;
         
     });
+    
+    if(self->eventCallBack != nil)
+   {
+       [[XSDK getInstance] doInCallBackThread:^{ [self->eventCallBack onHide];}];
+   }
 }
 
 -(void) destory{
@@ -118,6 +120,37 @@
         self.bannerView = nil;
     });
 }
+
+
+- (void)bannerViewDidReceiveAd:(nonnull GADBannerView *)bannerView
+{
+    if(self->eventCallBack != nil)
+   {
+       [[XSDK getInstance] doInCallBackThread:^{ [self->eventCallBack onLoad:@""];}];
+   }
+}
+
+- (void)bannerView:(nonnull GADBannerView *)bannerView
+    didFailToReceiveAdWithError:(nonnull NSError *)error
+{
+    if(self->eventCallBack != nil)
+   {
+       [[XSDK getInstance] doInCallBackThread:^{ [self->eventCallBack onError:@""];}];
+   }
+}
+
+/// Tells the delegate that an impression has been recorded for an ad.
+- (void)bannerViewDidRecordImpression:(nonnull GADBannerView *)bannerView
+{
+    
+}
+
+- (void)bannerViewDidRecordClick:(nonnull GADBannerView *)bannerView
+{
+    
+}
+
+
 
 @end
 

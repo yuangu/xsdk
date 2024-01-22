@@ -313,7 +313,7 @@ public class XSDK implements ISDK, ILogin, IPay, IShare, IAD, IEvent {
         if (mADSDKMap.containsKey(params.provider)) {
             return mADSDKMap.get(params.provider).createBannerAd(params, callBack);
         } else {
-            getLogger().log("not found login sdk:" + params.provider);
+            getLogger().log("not found BannerAd:" + params.provider);
         }
         return null;
     }

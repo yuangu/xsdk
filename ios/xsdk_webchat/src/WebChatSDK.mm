@@ -44,7 +44,15 @@ struct __AutoWebchatResg{
 -(void) initSDK:(SDKParams*) params :(id<IXSDKCallback>)callBack
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(self->isInitWebChatSDK) return;
+        if(self->isInitWebChatSDK)
+        {
+            if(callBack != NULL){
+                [callBack onSuccess:@""];
+            }
+         
+            return;
+        }
+           
         
         // 打印日志，方便查看bug
         [WXApi startLogByLevel:WXLogLevelDetail logBlock:^(NSString *log) {
@@ -55,9 +63,15 @@ struct __AutoWebchatResg{
         if([[dict allKeys] containsObject:@"UNIVERSAL_LINK"]){
             NSString* UNIVERSAL_LINK = dict[@"UNIVERSAL_LINK"];
             [WXApi registerApp:params.appid universalLink:UNIVERSAL_LINK];
+            if(callBack != NULL){
+                [callBack onSuccess:@""];
+            }
         }
         else{
             NSLog(@"请在info.plist增加UNIVERSAL_LINK参数");
+            if(callBack != NULL){
+                [callBack onFaild:@""];
+            }
         }
     });
 }

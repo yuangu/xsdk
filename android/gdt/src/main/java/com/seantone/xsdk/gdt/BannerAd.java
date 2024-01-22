@@ -2,6 +2,7 @@ package com.seantone.xsdk.gdt;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Looper;
 import android.view.Gravity;
@@ -100,6 +101,7 @@ public class BannerAd implements IBannerAd {
         LinearLayout bannerLayout = new LinearLayout(activity);
         bannerLayout.setOrientation(LinearLayout.VERTICAL);
         bannerLayout.addView(mAdView, getUnifiedBannerLayoutParams());
+        bannerLayout.setBackgroundColor(Color.WHITE);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         if(params.style!=null)

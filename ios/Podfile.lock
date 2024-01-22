@@ -1,9 +1,10 @@
 PODS:
   - WechatOpenSDK_UnPay (1.8.7.1)
-  - xsdk_apple_push (0.0.1)
-  - xsdk_core (0.0.1)
-  - xsdk_webchat (0.0.1):
+  - xsdk_apple_push (1.0.0)
+  - xsdk_core (1.0.0)
+  - xsdk_webchat (1.0.0):
     - WechatOpenSDK_UnPay
+    - xsdk_core
 
 DEPENDENCIES:
   - xsdk_apple_push (from `./xsdk_apple_push`)
@@ -24,10 +25,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   WechatOpenSDK_UnPay: 676bbc44d7309dce90697c2426f5b67304f42a2a
-  xsdk_apple_push: 40e52238025edd426ffb77027a15105f150c6a3d
-  xsdk_core: 6d40c026ba6f11936c92e674c050fd5bc5ea5b87
-  xsdk_webchat: 098994b24e01e9ce78f91e825894b4e35c4b9714
+  xsdk_apple_push: 32af7074c29bddcfb23ea690b69529c4d527007e
+  xsdk_core: 6ba2d815a6ad503475ee4bee22b73cc4e6e36762
+  xsdk_webchat: baa2482af1a322997ef4baba0c143ff19be58dc5
 
 PODFILE CHECKSUM: 8a050c44fb1446be9c1dec4231fd79a1e67e2608
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.12.1

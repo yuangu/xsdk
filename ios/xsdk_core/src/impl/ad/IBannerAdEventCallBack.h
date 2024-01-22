@@ -2,7 +2,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol IBannerAdEventCallBack <NSObject>
--(void)onLoad;
+-(void)onLoad:(NSString*) ret;
 -(void)onHide;
 -(void)onError:(NSString*) ret;
 @end

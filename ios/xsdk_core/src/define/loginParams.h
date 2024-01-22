@@ -5,3 +5,7 @@
 @interface LoginParams : NSObject 
 @property (nonatomic, copy) NSString *provider;
 @end
+
+@interface LogoutParams : NSObject
+@property (nonatomic, copy) NSString *provider;
+@end

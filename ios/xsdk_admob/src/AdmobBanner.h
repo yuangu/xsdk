@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AdmobBannder : NSObject<IBannerAd>
+@interface AdmobBannder : NSObject<IBannerAd, GADBannerViewDelegate>
 @property(nonatomic, strong) GADBannerView *bannerView;
 - (void) create:(ADParams*)params :(id<IBannerAdEventCallBack>)  callBack;
 -(void) show:(NSString*) params;

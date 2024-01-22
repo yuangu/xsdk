@@ -41,8 +41,8 @@
 - (void) forPush:(NSString *)provider :(id<IPush>)  obj;
 - (void) forAD:(NSString *)provider :(id<IShare>)  obj;
 - (void) forEvent:(NSString *)provider :(id<IShare>)  obj;
-
-
+-(bool) hasSDK:(NSString*) sdkName :(NSString*) sdkType;
+-(void) logout:(LogoutParams*) params :(id<IXSDKCallback>)callBack;
 
 +(void) initSDK:(NSString*) json :(id<IXSDKCallback>)callBack;
 +(void) login:(NSString*) json :(id<IXSDKCallback>)callBack;
@@ -50,7 +50,8 @@
 +(void) share:(NSString*) json :(id<IXSDKCallback>)callBack;
 +(void) onPush:(id<IPushCallback>)callback;
 +(void) postEvent:(NSString*) json;
-
++(bool) hasSDK:(NSString*) json;
++(void) logout:(NSString*) json  :(id<IXSDKCallback>)callBack;
 
 // 创建激励广告
 +(id<IRewardedVideoAd>) createRewardedVideoAd:(NSString*) json :(id<IRewardedVideoAdEventCallBack>)callBack;

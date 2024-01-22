@@ -3,3 +3,7 @@
 @implementation LoginParams
 
 @end
+
+@implementation  LogoutParams
+
+@end
