@@ -18,7 +18,7 @@ android {
 
 dependencies {
     implementation project(path: ':core')
-    implementation 'com.qq.e.union:union:4.562.1432'
+    implementation 'com.qq.e.union:union:4.570.1440'
 }
 
 if(hasProperty('SONATYPE_NEXUS_USERNAME') && hasProperty('SONATYPE_NEXUS_PASSWORD')){

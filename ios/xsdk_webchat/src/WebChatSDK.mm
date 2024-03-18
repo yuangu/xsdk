@@ -122,6 +122,9 @@ struct __AutoWebchatResg{
         [WXApi sendReq:req completion:^(BOOL isScuess){
             if(!isScuess){
                 [self->mCallBackMap removeObjectForKey:@"share"];
+                [[XSDK getInstance] doInCallBackThread:^{
+                    [callBack onFaild:@""];
+                }];
                 NSLog(@"分享失败");
             }
         } ];
