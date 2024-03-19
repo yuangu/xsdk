@@ -19,6 +19,7 @@ import com.seantone.xsdk.core.impl.ad.INativeAdEventCallBack;
 import com.seantone.xsdk.core.impl.ad.IRewardedVideoAd;
 import com.seantone.xsdk.core.impl.ad.IRewardedVideoAdEventCallBack;
 import com.seantone.xsdk.gdt.BannerAd;
+import com.seantone.xsdk.gdt.RewardVideo;
 
 /**
  * 腾讯优量汇
@@ -31,7 +32,7 @@ public class SDK implements ISDK, IAD {
 
     @Override
     public IRewardedVideoAd createRewardedVideoAd(AdParams params, IRewardedVideoAdEventCallBack callBack) {
-        return null;
+        return new RewardVideo(params, callBack);
     }
 
     @Override
@@ -51,12 +52,10 @@ public class SDK implements ISDK, IAD {
 
     @Override
     public void initSDK(SDKParams params, IXSDKCallback callback) {
-        try
-        {
+        try {
             Activity activity = XSDK.getInstance().getTopActivity();
             GDTAdSdk.init(activity.getApplicationContext(), params.appid);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             callback.onFaild("{}");
             return;
         }

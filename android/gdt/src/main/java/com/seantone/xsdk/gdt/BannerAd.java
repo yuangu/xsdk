@@ -35,7 +35,7 @@ public class BannerAd implements IBannerAd {
         Activity activity = XSDK.getInstance().getTopActivity();
         Point screenSize = new Point();
         activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
-        return new FrameLayout.LayoutParams(screenSize.x,  Math.round(screenSize.x / 6.4F));
+        return new FrameLayout.LayoutParams(screenSize.x, Math.round(screenSize.x / 6.4F));
     }
 
     void create(AdParams params, IBannerAdEventCallBack callBack) {
@@ -43,7 +43,7 @@ public class BannerAd implements IBannerAd {
         mAdView = new UnifiedBannerView(activity, params.adUnitId, new UnifiedBannerADListener() {
             @Override
             public void onNoAD(AdError adError) {
-                XSDK.getInstance().getLogger().log(  "ErrorId:" +  String.valueOf(adError.getErrorCode()) + " ErroMsg:" +  adError.getErrorMsg() );
+                XSDK.getInstance().getLogger().log("ErrorId:" + String.valueOf(adError.getErrorCode()) + " ErroMsg:" + adError.getErrorMsg());
 
                 JSONObject ret = new JSONObject();
                 try {
@@ -57,14 +57,14 @@ public class BannerAd implements IBannerAd {
 
             @Override
             public void onADReceive() {
-                XSDK.getInstance().getLogger().log("gdt banner: onADReceive" );
+                XSDK.getInstance().getLogger().log("gdt banner: onADReceive");
 
-                int height =  BannerAd.this.bannerLayout.getHeight();
-                int width =  BannerAd.this.bannerLayout.getWidth();
+                int height = BannerAd.this.bannerLayout.getHeight();
+                int width = BannerAd.this.bannerLayout.getWidth();
 
                 try {
                     JSONObject ret = new JSONObject();
-                    ret.put("width", width );
+                    ret.put("width", width);
                     ret.put("height", height);
                     if (callBack != null) {
                         callBack.onLoad(ret.toString());
@@ -76,12 +76,12 @@ public class BannerAd implements IBannerAd {
 
             @Override
             public void onADExposure() {
-                XSDK.getInstance().getLogger().log("gdt banner: onADExposure" );
+                XSDK.getInstance().getLogger().log("gdt banner: onADExposure");
             }
 
             @Override
             public void onADClosed() {
-                XSDK.getInstance().getLogger().log("gdt banner: onADClosed" );
+                XSDK.getInstance().getLogger().log("gdt banner: onADClosed");
                 if (callBack != null) {
                     callBack.onHide();
                 }
@@ -89,12 +89,12 @@ public class BannerAd implements IBannerAd {
 
             @Override
             public void onADClicked() {
-                XSDK.getInstance().getLogger().log("gdt banner: onADClicked" );
+                XSDK.getInstance().getLogger().log("gdt banner: onADClicked");
             }
 
             @Override
             public void onADLeftApplication() {
-                XSDK.getInstance().getLogger().log("gdt banner: onADLeftApplication" );
+                XSDK.getInstance().getLogger().log("gdt banner: onADLeftApplication");
             }
         });
 
@@ -104,8 +104,7 @@ public class BannerAd implements IBannerAd {
         bannerLayout.setBackgroundColor(Color.WHITE);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        if(params.style!=null)
-        {
+        if (params.style != null) {
             Utils.setBannerStyle(params.style, layoutParams);
         }
         XSDK.getInstance().getTopActivity().addContentView(bannerLayout, layoutParams);
@@ -131,7 +130,7 @@ public class BannerAd implements IBannerAd {
     @Override
     public void destory() {
         if (this.bannerLayout == null) return;
-        XSDK.getInstance().doInUIThread(() ->{
+        XSDK.getInstance().doInUIThread(() -> {
             this.mAdView.destroy();
             bannerLayout.removeAllViews();
             bannerLayout.setVisibility(View.GONE);
